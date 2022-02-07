@@ -1,23 +1,31 @@
-import logo from './logo.svg';
+import {useState, useEffect} from "react"
 import './App.css';
 
+const URL = "https://api.jokes.one/jod";
+
 function App() {
+  const [title, setTitle] = useState("")
+  const [text, setText] = useState("")
+
+  useEffect(()=>{
+    fetch(URL)
+      .then(response => response.json())
+      .then(
+        (response) => {
+          const joke = response.contents.jokes[0].joke;
+          setTitle(joke.title)
+          setText(joke.text)
+        }, (error) => {
+          alert(error)
+        }
+      )
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Joke of the day</h1>
+      <h3>{title}</h3>
+      <h3>{text}</h3>
     </div>
   );
 }
